@@ -2,100 +2,68 @@ package com.files;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class BrokenLinks {
-  private static final String HTTP = "http";
-  private static final String URL_HOST = HTTP + "://52.136.215.164";
-  private static final String URL_ADDRESS = URL_HOST + "/broken-links/";
-  private static final String HTTP_REGEX = "<a.*href=\"([^#][^@]*?)\".*>";
+  private static final String URL_ADDRESS = "http://52.136.215.164/broken-links/";
   private static final Integer ERROR_CODE = 300;
   private static final Set<String> setLink = new HashSet<>();
-  private static Integer countValidLink = 0, countInvalidLink = 0;
 
-  private static void writeLink(final String url, HttpURLConnection urlConnection, FileWriter file) {
-    try {
-      String str = url + ' ' + urlConnection.getResponseCode() + ' ' + urlConnection.getResponseMessage() + "\n";
-      file.write(str);
-      file.flush();
-    } catch (Exception error) {
-      error.printStackTrace();
+  private static boolean isLinkAppropriate(String link) {
+    List<String> forbidden_prefixes = Arrays.asList("#", "tel://", "mailto:");
+    for (String prefix: forbidden_prefixes) {
+      if (link.startsWith(prefix)) {
+        return false;
+      }
     }
+    return true;
   }
 
-  private static void validationCheck(FileWriter validLinksFile, FileWriter invalidLinksFile, String url) {
+  private static void getNewLinks(FileWriter invalidLinksFile, String url) {
+    Document doc;
     HttpURLConnection urlConnection = null;
-    StringBuilder response = new StringBuilder();
-
     try {
-      urlConnection = (HttpURLConnection) new URL(url).openConnection();
-      if (urlConnection.getResponseCode() > ERROR_CODE) {
-        writeLink(url, urlConnection, invalidLinksFile);
-        ++countInvalidLink;
-        return;
-      }
-      writeLink(url, urlConnection, validLinksFile);
-      ++countValidLink;
-    } catch (Exception error) {
-      error.printStackTrace();
-    }
-
-    try {
-      InputStreamReader streamReader = new InputStreamReader(urlConnection.getInputStream());
-      char[] iss = new char[100];
-      while (true) {
-        int index = streamReader.read(iss, 0, iss.length);
-        if (index < 0) {
-          break;
+      doc = Jsoup.connect(url).get();
+      Elements links = doc.select("a[href]");
+      for (Element link : links) {
+        URI uri = new URI(url);
+        URI nextUri = uri.resolve(link.attr("href"));
+        String nextUrl = nextUri.toString();
+        if (setLink.contains(nextUrl) || !isLinkAppropriate(link.attr("href"))) {
+          continue;
         }
-        response.append(iss, 0, index);
-      }
-      streamReader.close();
-    } catch (Exception error) {
-      error.printStackTrace();
-    }
-
-    Matcher matcher = Pattern.compile(HTTP_REGEX).matcher(response.toString());
-
-    while (matcher.find()) {
-      String value = matcher.group(1);
-      String urlStr = URL_ADDRESS + value;
-      if (!setLink.contains(value)) {
-        setLink.add(value);
-        if (!value.startsWith(HTTP)) {
-          validationCheck(validLinksFile, invalidLinksFile, urlStr);
+        setLink.add(nextUrl);
+        urlConnection = (HttpURLConnection) new URL(nextUrl).openConnection();
+        int statusCode = urlConnection.getResponseCode();
+        if (statusCode >= ERROR_CODE) {
+          //запись в csv
+          invalidLinksFile.write(nextUrl + " - " + statusCode + "\n");
+          invalidLinksFile.flush();
+          //
+        }
+        else if (uri.getHost() == nextUri.getHost()) {
+            getNewLinks(invalidLinksFile, nextUrl);
         }
       }
-    }
-  }
-
-  private static void printInfoLink(FileWriter file, Integer count) {
-    try {
-      Date date = new Date();
-      String str = "\n" + "Count link: " + count.toString() + "\n" + "Date check: " + date.toString();
-      file.write(str);
-      file.flush();
-      file.close();
-    } catch (Exception error) {
-      error.printStackTrace();
+    } catch (IOException | URISyntaxException e) {
+      e.printStackTrace();
     }
   }
 
   public static void main(String[] args) {
     try {
-      FileWriter validLinksFile = new FileWriter("./testOutput/validLinks.txt");
       FileWriter invalidLinksFile = new FileWriter("./testOutput/invalidLinks.txt");
-
-      validationCheck(validLinksFile, invalidLinksFile, URL_ADDRESS);
-
-      printInfoLink(validLinksFile, countValidLink);
-      printInfoLink(invalidLinksFile, countInvalidLink);
-
+      getNewLinks(invalidLinksFile, URL_ADDRESS);
     } catch (Exception error) {
       System.out.println(error.getMessage());
     }
