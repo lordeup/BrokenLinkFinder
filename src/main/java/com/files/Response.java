@@ -19,6 +19,17 @@ public class Response {
         return url;
     }
 
+    @Override
+    public boolean equals(Object arg) {
+        if (arg instanceof Response) {
+            Response result = (Response) arg;
+            return (this.url.equals(result.getUrl()) &&
+                    this.statusCode.equals(result.getStatusCode()) &&
+                    this.statusMessage.equals(result.getStatusMessage()));
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
     private String url;
     private String statusMessage;

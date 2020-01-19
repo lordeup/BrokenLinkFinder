@@ -11,7 +11,13 @@ public class BrokenLinks {
 
     public BrokenLinks(List<String> pages, ParserState state) throws URISyntaxException, IOException {
         for (String page : pages) {
-            brokenLinks.addAll(getBrokenLinksOfPage(page, state));
+            List<Response> brokenLinksOfPage = getBrokenLinksOfPage(page, state);
+            for (Response brokenLink: brokenLinksOfPage) {
+                if (!brokenLinks.contains(brokenLink)){
+                    brokenLinks.add(brokenLink);
+                    brokenLinksCount++;
+                }
+            }
         }
     }
 
@@ -34,7 +40,6 @@ public class BrokenLinks {
                 int statusCode = urlConnection.getResponseCode();
                 String statusMessage = urlConnection.getResponseMessage();
                 result.add(new Response(link, statusCode, statusMessage));
-                brokenLinksCount++;
             }
         }
         return result;
