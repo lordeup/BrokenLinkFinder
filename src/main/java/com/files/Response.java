@@ -1,37 +1,35 @@
 package com.files;
 
 public class Response {
-    public Response(String url, Integer statusCode, String statusMessage) {
-        this.url = url;
-        this.statusCode = statusCode;
-        this.statusMessage = statusMessage;
-    }
+  private final String url;
+  private final Integer statusCode;
+  private final String statusMessage;
 
-    public Integer getStatusCode() {
-        return statusCode;
-    }
+  public Response(String url, Integer statusCode, String statusMessage) {
+    this.url = url;
+    this.statusCode = statusCode;
+    this.statusMessage = statusMessage;
+  }
 
-    public String getStatusMessage() {
-        return statusMessage;
-    }
+  public String getUrl() {
+    return url;
+  }
 
-    public String getUrl() {
-        return url;
-    }
+  public Integer getStatusCode() {
+    return statusCode;
+  }
 
-    @Override
-    public boolean equals(Object arg) {
-        if (arg instanceof Response) {
-            Response result = (Response) arg;
-            return (this.url.equals(result.getUrl()) &&
-                    this.statusCode.equals(result.getStatusCode()) &&
-                    this.statusMessage.equals(result.getStatusMessage()));
-        } else {
-            throw new IllegalArgumentException();
-        }
-    }
+  public String getStatusMessage() {
+    return statusMessage;
+  }
 
-    private String url;
-    private String statusMessage;
-    private Integer statusCode;
+  @Override
+  public boolean equals(Object arg) {
+    if (arg instanceof Response) {
+      Response result = (Response) arg;
+      return getUrl().equals(result.getUrl()) && getStatusCode().equals(result.getStatusCode()) && getStatusMessage().equals(result.getStatusMessage());
+    } else {
+      throw new IllegalArgumentException();
+    }
+  }
 }

@@ -1,5 +1,6 @@
 package com.files;
 
+import com.files.parser.ParserState;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document;
@@ -14,46 +15,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Links {
-    public Links(String page, ParserState state) throws URISyntaxException, IOException {
-        openDocument(page, state);
-        Elements hrefLinks = document.select("[href]");
-        Elements srcLinks = document.select("[src]");
-        String uriPath = document.location().toString();
-        if (state == ParserState.FILES) {
-            uriPath = "file:" + uriPath.replace("\\", "/");
-        }
-        URI uri = new URI(uriPath);
-        addLinks(hrefLinks, uri, "href");
-        addLinks(srcLinks, uri, "src");
+  private final List<String> links;
+  private final ParserState state;
+  private final String page;
+  private Document document;
+
+  public Links(String page, ParserState state) {
+    this.page = page;
+    this.state = state;
+    this.links = new ArrayList<>();
+  }
+
+  public void run() throws IOException, URISyntaxException {
+    openDocument();
+
+    Elements hrefLinks = document.select("[href]");
+    Elements srcLinks = document.select("[src]");
+
+    String uriPath = document.location();
+    if (state == ParserState.FILES) {
+      uriPath = "file:" + uriPath.replace("\\", "/");
     }
 
-    public List<String> getLinks() {
-        return links;
-    }
+    URI uri = new URI(uriPath);
 
-    private List<String> links = new ArrayList<>();
-    private Document document;
+    addLinks(hrefLinks, uri, "href");
+    addLinks(srcLinks, uri, "src");
+  }
 
-    private void openDocument(String link, ParserState state) throws IOException {
-        switch (state) {
-            case FILES:
-                File file = new File(link);
-                document = Jsoup.parse(file, null);
-                break;
-            case LINKS:
-                document = Jsoup.connect(link).get();
-                break;
-            case UNDEFINED:
-                throw new FileNotFoundException();
-        }
-    }
+  public List<String> getLinks() {
+    return links;
+  }
 
-    private void addLinks(Elements elements, URI uri, String attributeKey) {
-        for (Element link : elements) {
-            String nextUrl = uri.resolve(link.attr(attributeKey)).toString();
-            if (!links.contains(nextUrl)) {
-                links.add(nextUrl);
-            }
-        }
+  private void openDocument() throws IOException {
+    switch (state) {
+      case FILES:
+        File file = new File(page);
+        document = Jsoup.parse(file, null);
+        break;
+      case LINKS:
+        document = Jsoup.connect(page).get();
+        break;
+      case UNDEFINED:
+        throw new FileNotFoundException();
     }
+  }
+
+  private void addLinks(Elements elements, URI uri, String attributeKey) {
+    for (Element link : elements) {
+      String nextUrl = uri.resolve(link.attr(attributeKey)).toString();
+      if (!links.contains(nextUrl)) {
+        links.add(nextUrl);
+      }
+    }
+  }
 }

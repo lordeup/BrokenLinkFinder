@@ -1,47 +1,67 @@
 package com.files;
 
+import com.files.parser.ParserState;
+
 import java.io.IOException;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BrokenLinks {
-    private List<Response> brokenLinks = new ArrayList<>();
-    private static final int ERROR_CODE = 300;
+  private final List<String> pages;
+  private final List<Response> brokenLinks;
+  private final ParserState state;
+  private Integer brokenLinksCount;
 
-    public BrokenLinks(List<String> pages, ParserState state) throws URISyntaxException, IOException {
-        for (String page : pages) {
-            List<Response> brokenLinksOfPage = getBrokenLinksOfPage(page, state);
-            for (Response brokenLink: brokenLinksOfPage) {
-                if (!brokenLinks.contains(brokenLink)){
-                    brokenLinks.add(brokenLink);
-                    brokenLinksCount++;
-                }
-            }
+  private static final Integer ERROR_CODE = 300;
+
+  public BrokenLinks(List<String> pages, ParserState state) {
+    this.pages = pages;
+    this.state = state;
+    this.brokenLinks = new ArrayList<>();
+    this.brokenLinksCount = 0;
+  }
+
+  public void run() throws IOException, URISyntaxException {
+    for (String page : pages) {
+      for (Response brokenLink : getBrokenLinksOfPage(page, state)) {
+        if (!brokenLinks.contains(brokenLink)) {
+          addBrokenLink(brokenLink);
+          ++brokenLinksCount;
         }
+      }
     }
+  }
 
-    public List<Response> getBrokenLinks() {
-        return brokenLinks;
+  public List<Response> getBrokenLinks() {
+    return brokenLinks;
+  }
+
+  public Integer getBrokenLinksCount() {
+    return brokenLinksCount;
+  }
+
+  private void addBrokenLink(Response brokenLink) {
+    brokenLinks.add(brokenLink);
+  }
+
+  private List<Response> getBrokenLinksOfPage(String page, ParserState state) throws URISyntaxException, IOException {
+    List<Response> result = new ArrayList<>();
+
+    Links links = new Links(page, state);
+    links.run();
+
+    for (String link : links.getLinks()) {
+      HttpURLConnection urlConnection = (HttpURLConnection) new URL(link).openConnection();
+
+      if (urlConnection.getResponseCode() >= ERROR_CODE) {
+        int statusCode = urlConnection.getResponseCode();
+        String statusMessage = urlConnection.getResponseMessage();
+        result.add(new Response(link, statusCode, statusMessage));
+      }
     }
-
-    public int getBrokenLinksCount() {
-        return brokenLinksCount;
-    }
-
-    private int brokenLinksCount = 0;
-
-    private List<Response> getBrokenLinksOfPage(String page, ParserState state) throws URISyntaxException, IOException {
-        List<Response> result = new ArrayList<>();
-        List<String> links = new Links(page, state).getLinks();
-        for(String link: links) {
-            HttpURLConnection urlConnection = (HttpURLConnection) new URL(link).openConnection();
-            if (urlConnection.getResponseCode() >= ERROR_CODE) {
-                int statusCode = urlConnection.getResponseCode();
-                String statusMessage = urlConnection.getResponseMessage();
-                result.add(new Response(link, statusCode, statusMessage));
-            }
-        }
-        return result;
-    }
+    return result;
+  }
 }

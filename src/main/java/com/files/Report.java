@@ -5,26 +5,21 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 public class Report {
-    public Report(String filename) throws FileNotFoundException {
-        this.writer = new PrintWriter(new File(filename));
-        this.filename = filename;
-    }
+  private final String filename;
 
-    public void write(BrokenLinks brokenLinks) {
-        if (writer == null) {
-            return;
-        }
-        for (Response brokenLink : brokenLinks.getBrokenLinks()) {
-            String string = brokenLink.getUrl() + ";" +
-                            brokenLink.getStatusCode() + ";" +
-                            brokenLink.getStatusMessage() + "\n";
-            writer.write(string);
-            writer.flush();
-        }
-        System.out.println("Found " + brokenLinks.getBrokenLinksCount() +
-                           " broken links, for details check file '" + filename + "'");
-    }
+  public Report(String filename) {
+    this.filename = filename;
+  }
 
-    private PrintWriter writer = null;
-    private String filename;
+  public void write(BrokenLinks brokenLinks) throws FileNotFoundException {
+    try (PrintWriter writer = new PrintWriter(new File(filename))) {
+      for (Response brokenLink : brokenLinks.getBrokenLinks()) {
+        String str = brokenLink.getUrl() + "\t" + brokenLink.getStatusCode() + "\t" + brokenLink.getStatusMessage() + "\n";
+
+        writer.write(str);
+        writer.flush();
+      }
+      System.out.println("Found " + brokenLinks.getBrokenLinksCount() + " broken links, for details check file '" + filename + "'");
+    }
+  }
 }
