@@ -50,15 +50,22 @@ public class Links {
   private void openDocument() throws IOException {
     switch (state) {
       case FILES:
-        File file = new File(page);
-        document = Jsoup.parse(file, null);
-        break;
+        parse();
+        return;
       case LINKS:
-        document = Jsoup.connect(page).get();
-        break;
+        connect();
+        return;
       case UNDEFINED:
         throw new FileNotFoundException();
     }
+  }
+
+  private void connect() throws IOException {
+    document = Jsoup.connect(page).get();
+  }
+
+  private void parse() throws IOException {
+    document = Jsoup.parse(new File(page), null);
   }
 
   private void addLinks(Elements elements, URI uri, String attributeKey) {

@@ -19,29 +19,12 @@ public class Parser {
   public void parsing() {
     ParserState state = ParserState.UNDEFINED;
     for (String str : args) {
-      if (changeState(str) != ParserState.UNDEFINED) {
-        state = changeState(str);
+      ParserState parserState = setState(str);
+      if (parserState != ParserState.UNDEFINED) {
+        state = parserState;
         continue;
       }
-      switch (state) {
-        case FILES: {
-          addPage(str);
-          setParserState(ParserState.FILES);
-          continue;
-        }
-        case LINKS: {
-          addPage(str);
-          setParserState(ParserState.LINKS);
-          continue;
-        }
-        case OUT: {
-          outputFile = str;
-          continue;
-        }
-        case UNDEFINED: {
-          throw new IllegalArgumentException("Wrong input");
-        }
-      }
+      checkState(str, state);
     }
     if (outputFile.isEmpty()) {
       throw new IllegalArgumentException("Please, write out file");
@@ -68,8 +51,30 @@ public class Parser {
     pages.add(page);
   }
 
-  private ParserState changeState(String element) {
-    switch (element) {
+  private void checkState(String str, ParserState state) {
+    switch (state) {
+      case FILES: {
+        addPage(str);
+        setParserState(ParserState.FILES);
+        return;
+      }
+      case LINKS: {
+        addPage(str);
+        setParserState(ParserState.LINKS);
+        return;
+      }
+      case OUT: {
+        outputFile = str;
+        return;
+      }
+      case UNDEFINED: {
+        throw new IllegalArgumentException("Input is incorrectly specified. Try again");
+      }
+    }
+  }
+
+  private ParserState setState(String str) {
+    switch (str) {
       case "--files":
         return ParserState.FILES;
       case "--links":

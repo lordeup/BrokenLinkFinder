@@ -47,6 +47,7 @@ public class BrokenLinks {
     brokenLinks.add(brokenLink);
   }
 
+  // TODO подумать как упростить
   private List<Response> getBrokenLinksOfPage(String page, ParserState state) throws URISyntaxException, IOException {
     List<Response> result = new ArrayList<>();
 
@@ -59,7 +60,8 @@ public class BrokenLinks {
       if (urlConnection.getResponseCode() >= ERROR_CODE) {
         int statusCode = urlConnection.getResponseCode();
         String statusMessage = urlConnection.getResponseMessage();
-        result.add(new Response(link, statusCode, statusMessage));
+        Response response = new Response(link, statusCode, statusMessage);
+        result.add(response);
       }
     }
     return result;

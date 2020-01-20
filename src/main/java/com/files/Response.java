@@ -27,9 +27,9 @@ public class Response {
   public boolean equals(Object arg) {
     if (arg instanceof Response) {
       Response result = (Response) arg;
-      return getUrl().equals(result.getUrl()) && getStatusCode().equals(result.getStatusCode()) && getStatusMessage().equals(result.getStatusMessage());
+      return url.equals(result.getUrl()) && statusCode.equals(result.getStatusCode()) && statusMessage.equals(result.getStatusMessage());
     } else {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Object not equals");
     }
   }
 }
