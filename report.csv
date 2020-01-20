@@ -1,7 +1,7 @@
-http://52.136.215.164/links/locked.php;423;Locked
-http://52.136.215.164/links/movedper.php;301;Moved Permanently
-http://52.136.215.164/links/404not404found404.php;404;Not Found
-http://52.136.215.164/links/found302.php;302;Found
-http://52.136.215.164/links/return500bad.php;500;Internal Server Error
-http://52.136.215.164/links/un503availible.php;503;Service Unavailable
-http://htmlbook.ru/images/logo.gif;404;Not Found
+http://52.136.215.164/links/locked.php, 423, Locked
+http://52.136.215.164/links/movedper.php, 301, Moved Permanently
+http://52.136.215.164/links/404not404found404.php, 404, Not Found
+http://52.136.215.164/links/found302.php, 302, Found
+http://52.136.215.164/links/return500bad.php, 500, Internal Server Error
+http://52.136.215.164/links/un503availible.php, 503, Service Unavailable
+http://htmlbook.ru/images/logo.gif, 404, Not Found
