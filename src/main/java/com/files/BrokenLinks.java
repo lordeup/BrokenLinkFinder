@@ -59,6 +59,7 @@ public class BrokenLinks {
       {
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(link).openConnection();
         urlConnection.setReadTimeout(10000);
+        urlConnection.setInstanceFollowRedirects(false);
 
         if (urlConnection.getResponseCode() >= ERROR_CODE) {
           int statusCode = urlConnection.getResponseCode();

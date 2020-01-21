@@ -1,0 +1,53 @@
+http://httpstat.us/100, 522, Read timeout
+http://httpstat.us/101, 522, Read timeout
+http://httpstat.us/102, 522, Read timeout
+http://httpstat.us/103, 522, Read timeout
+http://httpstat.us/300, 300, Multiple Choices
+http://httpstat.us/301, 301, Moved Permanently
+http://httpstat.us/302, 302, Found
+http://httpstat.us/303, 303, See Other
+http://httpstat.us/304, 304, Not Modified
+http://httpstat.us/305, 305, Use Proxy
+http://httpstat.us/306, 306, Unused
+http://httpstat.us/307, 307, Temporary Redirect
+http://httpstat.us/308, 308, Permanent Redirect
+http://httpstat.us/400, 400, Bad Request
+http://httpstat.us/401, 401, Unauthorized
+http://httpstat.us/402, 402, Payment Required
+http://httpstat.us/403, 403, Forbidden
+http://httpstat.us/404, 404, Not Found
+http://httpstat.us/405, 405, Method Not Allowed
+http://httpstat.us/406, 406, Not Acceptable
+http://httpstat.us/407, 407, Proxy Authentication Required
+http://httpstat.us/408, 408, Request Timeout
+http://httpstat.us/409, 409, Conflict
+http://httpstat.us/410, 410, Gone
+http://httpstat.us/411, 411, Length Required
+http://httpstat.us/412, 412, Precondition Failed
+http://httpstat.us/413, 413, Request Entity Too Large
+http://httpstat.us/414, 414, Request-URI Too Long
+http://httpstat.us/415, 415, Unsupported Media Type
+http://httpstat.us/416, 416, Requested Range Not Satisfiable
+http://httpstat.us/417, 417, Expectation Failed
+http://httpstat.us/418, 418, I'm a teapot
+http://httpstat.us/421, 421, Misdirected Request
+http://httpstat.us/422, 422, Unprocessable Entity
+http://httpstat.us/423, 423, Locked
+http://httpstat.us/425, 425, Too Early
+http://httpstat.us/426, 426, Upgrade Required
+http://httpstat.us/428, 428, Precondition Required
+http://httpstat.us/429, 429, Too Many Requests
+http://httpstat.us/431, 431, Request Header Fields Too Large
+http://httpstat.us/451, 451, Unavailable For Legal Reasons
+http://httpstat.us/500, 500, Internal Server Error
+http://httpstat.us/501, 501, Not Implemented
+http://httpstat.us/502, 502, Bad Gateway
+http://httpstat.us/503, 503, Service Unavailable
+http://httpstat.us/504, 504, Gateway Timeout
+http://httpstat.us/505, 505, HTTP Version Not Supported
+http://httpstat.us/506, 506, Variant Also Negotiates
+http://httpstat.us/507, 507, Insufficient Storage
+http://httpstat.us/511, 511, Network Authentication Required
+http://httpstat.us/520, 520, Web server is returning an unknown error
+http://httpstat.us/522, 522, Connection timed out
+http://httpstat.us/524, 524, A timeout occurred
