@@ -55,12 +55,19 @@ public class BrokenLinks {
     links.run();
 
     for (String link : links.getLinks()) {
-      HttpURLConnection urlConnection = (HttpURLConnection) new URL(link).openConnection();
+      try
+      {
+        HttpURLConnection urlConnection = (HttpURLConnection) new URL(link).openConnection();
+        urlConnection.setReadTimeout(10000);
 
-      if (urlConnection.getResponseCode() >= ERROR_CODE) {
-        int statusCode = urlConnection.getResponseCode();
-        String statusMessage = urlConnection.getResponseMessage();
-        Response response = new Response(link, statusCode, statusMessage);
+        if (urlConnection.getResponseCode() >= ERROR_CODE) {
+          int statusCode = urlConnection.getResponseCode();
+          String statusMessage = urlConnection.getResponseMessage();
+          Response response = new Response(link, statusCode, statusMessage);
+          result.add(response);
+        }
+      } catch (Exception ex) {
+        Response response = new Response(link, 522, "Read timeout");
         result.add(response);
       }
     }
