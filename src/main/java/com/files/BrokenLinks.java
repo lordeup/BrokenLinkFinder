@@ -55,8 +55,7 @@ public class BrokenLinks {
     links.run();
 
     for (String link : links.getLinks()) {
-      try
-      {
+      try {
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(link).openConnection();
         urlConnection.setReadTimeout(10000);
         urlConnection.setInstanceFollowRedirects(false);

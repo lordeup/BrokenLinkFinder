@@ -18,7 +18,10 @@ public class Report {
         fileWriter.write(str);
         fileWriter.flush();
       }
-      System.out.println("Found " + brokenLinks.getBrokenLinksCount() + " broken links, for details check file '" + filename + "'");
+      Integer brokenLinksCount = brokenLinks.getBrokenLinksCount();
+      System.out.println(brokenLinksCount > 0
+              ? "Found " + brokenLinksCount + " broken links, for details check file '" + filename + "'"
+              : "Not found broken links");
     }
   }
 }

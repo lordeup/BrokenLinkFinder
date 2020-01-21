@@ -9,6 +9,11 @@ public class Parser {
   private String outputFile;
   private ParserState parserState;
 
+  private static final String ERROR_MESSAGE = "Invalid arguments. Must be:\n" +
+          "BrokenLinkFinder <--files> <page1.html> <page2.html> ... <pageN.html> <--out> <report.csv>\n" +
+          "OR\n" +
+          "BrokenLinkFinder <--links> <link1.html> <link2.html> ... <linkN.html> <--out> <report.csv>";
+
   public Parser(List<String> args) {
     this.args = args;
     this.pages = new ArrayList<>();
@@ -17,12 +22,18 @@ public class Parser {
   }
 
   public void parsing() {
+    if (args.isEmpty()) {
+      throw new IllegalArgumentException(ERROR_MESSAGE);
+    }
     ParserState state = ParserState.UNDEFINED;
     for (String str : args) {
       ParserState parserState = setState(str);
       if (parserState != ParserState.UNDEFINED) {
         state = parserState;
         continue;
+      }
+      if (!outputFile.isEmpty()) {
+        throw new IllegalArgumentException(ERROR_MESSAGE);
       }
       checkState(str, state);
     }
