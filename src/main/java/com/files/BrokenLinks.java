@@ -70,7 +70,6 @@ public class BrokenLinks {
         Response response = new Response(link, 522, "Read timeout");
         result.add(response);
       }
-      System.out.println(result.size());
     }
     return result;
   }
