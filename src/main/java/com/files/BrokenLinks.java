@@ -13,7 +13,6 @@ public class BrokenLinks {
   private final List<String> pages;
   private final List<Response> brokenLinks;
   private final ParserState state;
-  private Integer brokenLinksCount;
 
   private static final Integer ERROR_CODE = 300;
 
@@ -21,15 +20,13 @@ public class BrokenLinks {
     this.pages = pages;
     this.state = state;
     this.brokenLinks = new ArrayList<>();
-    this.brokenLinksCount = 0;
   }
 
   public void run() throws IOException, URISyntaxException {
     for (String page : pages) {
-      for (Response brokenLink : getBrokenLinksOfPage(page, state)) {
+      for (Response brokenLink : getBrokenLinksOfPage(page)) {
         if (!brokenLinks.contains(brokenLink)) {
           addBrokenLink(brokenLink);
-          ++brokenLinksCount;
         }
       }
     }
@@ -40,7 +37,7 @@ public class BrokenLinks {
   }
 
   public Integer getBrokenLinksCount() {
-    return brokenLinksCount;
+    return brokenLinks.size();
   }
 
   private void addBrokenLink(Response brokenLink) {
@@ -48,7 +45,7 @@ public class BrokenLinks {
   }
 
   // TODO подумать как упростить
-  private List<Response> getBrokenLinksOfPage(String page, ParserState state) throws URISyntaxException, IOException {
+  private List<Response> getBrokenLinksOfPage(String page) throws URISyntaxException, IOException {
     List<Response> result = new ArrayList<>();
 
     Links links = new Links(page, state);

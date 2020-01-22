@@ -70,9 +70,9 @@ public class Links {
 
   private void addLinks(Elements elements, URI uri, String attributeKey) {
     for (Element link : elements) {
-      String nextUrl = uri.resolve(link.attr(attributeKey)).toString();
-      if (!links.contains(nextUrl)) {
-        links.add(nextUrl);
+      String url = uri.resolve(link.attr(attributeKey)).toString();
+      if (!links.contains(url)) {
+        links.add(url);
       }
     }
   }
