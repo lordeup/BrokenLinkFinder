@@ -1,5 +1,7 @@
 package com.files.parser;
 
+import com.files.errormessage.ErrorMessage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,15 +10,6 @@ public class Parser {
   private final List<String> pages;
   private String outputFile;
   private ParserState parserState;
-
-  private static final String ERROR_MESSAGE = "Invalid arguments. Must be:\n" +
-          "BrokenLinkFinder <" + ModeOperation.FILES.getMode() + "> <page1.html> <page2.html> ... <pageN.html> " +
-          "<" + ModeOperation.OUT.getMode() + "> <report.csv>\n" +
-          "OR\n" +
-          "BrokenLinkFinder <" + ModeOperation.LINKS.getMode() + "> <link1.html> <link2.html> ... <linkN.html> " +
-          "<" + ModeOperation.OUT.getMode() + "> <report.csv>";
-
-  private static final String ERROR_MODE = "Invalid arguments. The program mode is already set to ";
 
   public Parser(List<String> args) {
     this.args = args;
@@ -27,22 +20,29 @@ public class Parser {
 
   public void parsing() {
     if (args.isEmpty()) {
-      throw new IllegalArgumentException(ERROR_MESSAGE);
+      throw new IllegalArgumentException(ErrorMessage.ERROR_ARGS);
     }
+
     ParserState state = ParserState.UNDEFINED;
+
     for (String str : args) {
       if (!outputFile.isEmpty()) {
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException(ErrorMessage.ERROR_MANY_OUT_FILE);
       }
+
       ParserState parserState = getState(str);
       if (parserState != ParserState.UNDEFINED) {
+        if (state != ParserState.UNDEFINED && parserState != ParserState.OUT) {
+          throw new IllegalArgumentException(ErrorMessage.ERROR_MODE);
+        }
         state = parserState;
         continue;
       }
       runStateCase(str, state);
     }
+
     if (outputFile.isEmpty()) {
-      throw new IllegalArgumentException("Please, write out file");
+      throw new IllegalArgumentException(ErrorMessage.ERROR_NO_OUT_FILE);
     }
   }
 
@@ -69,30 +69,24 @@ public class Parser {
   private void runStateCase(String str, ParserState state) {
     switch (state) {
       case FILES: {
-        if (parserState == ParserState.LINKS) {
-          throw new IllegalArgumentException(ERROR_MODE + ModeOperation.LINKS.getMode());
-        }
         addPage(str);
         setParserState(ParserState.FILES);
         return;
       }
       case LINKS: {
-        if (parserState == ParserState.FILES) {
-          throw new IllegalArgumentException(ERROR_MODE + ModeOperation.FILES.getMode());
-        }
         addPage(str);
         setParserState(ParserState.LINKS);
         return;
       }
       case OUT: {
         if (pages.isEmpty()) {
-          throw new IllegalArgumentException("Please enter at least one link or file");
+          throw new IllegalArgumentException(ErrorMessage.ERROR_NO_FILE_OR_LINK);
         }
         outputFile = str;
         return;
       }
       case UNDEFINED: {
-        throw new IllegalArgumentException(ERROR_MESSAGE);
+        throw new IllegalArgumentException(ErrorMessage.ERROR_ARGS);
       }
     }
   }

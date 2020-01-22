@@ -1,5 +1,7 @@
 package com.files;
 
+import com.files.errormessage.ErrorMessage;
+
 public class Response {
   private final String url;
   private final Integer statusCode;
@@ -29,7 +31,7 @@ public class Response {
       Response result = (Response) arg;
       return url.equals(result.getUrl()) && statusCode.equals(result.getStatusCode()) && statusMessage.equals(result.getStatusMessage());
     } else {
-      throw new IllegalArgumentException("Object not equals");
+      throw new IllegalArgumentException(ErrorMessage.ERROR_OBJECT_DIFFERENT_TYPES);
     }
   }
 }
