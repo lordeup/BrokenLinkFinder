@@ -1,6 +1,9 @@
-package com.files;
+package com.files.brokenlinks;
 
+import com.files.links.Links;
 import com.files.parser.ParserState;
+import com.files.property.Property;
+import com.files.response.Response;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -51,10 +54,12 @@ public class BrokenLinks {
     Links links = new Links(page, state);
     links.run();
 
+    Property property = new Property();
+
     for (String link : links.getLinks()) {
       try {
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(link).openConnection();
-        urlConnection.setReadTimeout(10000);
+        urlConnection.setReadTimeout(property.getConnectionTimeout());
         urlConnection.setInstanceFollowRedirects(false);
 
         if (urlConnection.getResponseCode() >= ERROR_CODE) {

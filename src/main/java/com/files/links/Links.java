@@ -1,6 +1,8 @@
-package com.files;
+package com.files.links;
 
 import com.files.parser.ParserState;
+import com.files.property.Property;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document;
@@ -13,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Links {
   private final List<String> links;
@@ -61,7 +64,9 @@ public class Links {
   }
 
   private void connect() throws IOException {
-    document = Jsoup.connect(page).get();
+    Property property = new Property();
+    int connectionTimeout = property.getConnectionTimeout();
+    document = Jsoup.connect(page).timeout(connectionTimeout).get();
   }
 
   private void parse() throws IOException {

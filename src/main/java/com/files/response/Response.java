@@ -1,4 +1,4 @@
-package com.files;
+package com.files.response;
 
 public class Response {
   private final String url;

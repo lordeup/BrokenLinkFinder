@@ -1,6 +1,8 @@
 package com.files;
 
+import com.files.brokenlinks.BrokenLinks;
 import com.files.parser.Parser;
+import com.files.report.Report;
 
 import java.util.Arrays;
 
