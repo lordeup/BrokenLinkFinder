@@ -34,7 +34,6 @@ public class Main {
     for (String page : pages) {
       Links links = new Links(page, parserState);
       links.findLinks();
-
       BrokenLinks brokenLinks = new BrokenLinks(links.getLinks());
       brokenLinks.findBrokenLinks();
 
