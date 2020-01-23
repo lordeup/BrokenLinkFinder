@@ -15,18 +15,18 @@ class LinksTest {
     void checkFindLinksWithParserStateFiles() throws IOException, URISyntaxException {
         Links links = new Links("input.html", ParserState.FILES);
         links.findLinks();
-        assertEquals(TestConst.generateLinksForParseStateFiles(), links.getLinks());
+        assertEquals(TestConst.getLinksForParseStateFiles(), links.getLinks());
     }
 
     @Test
     void checkFindLinksWithParserStateLinks() throws IOException, URISyntaxException {
         Links links = new Links("https://ww.ru/", ParserState.LINKS);
         links.findLinks();
-        assertEquals(TestConst.generateLinksForParseStateLinks(), links.getLinks());
+        assertEquals(TestConst.getLinksForParseStateLinks(), links.getLinks());
     }
 
     @Test
-    void checkFindLinksWithParserStateUndefined() throws IOException, URISyntaxException {
+    void checkFindLinksWithParserStateUndefined() {
         Links links = new Links("https://ww.ru/", ParserState.UNDEFINED);
         assertThrows(FileNotFoundException.class, links::findLinks);
     }

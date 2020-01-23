@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class BrokenLinksTest {
     @Test
     void checkFindBrokenLinks() throws InterruptedException, ExecutionException, IOException {
-        BrokenLinks brokenLinks = new BrokenLinks(TestConst.generateLinksForParseStateFiles());
+        BrokenLinks brokenLinks = new BrokenLinks(TestConst.getLinksForParseStateFiles());
         brokenLinks.findBrokenLinks();
-        assertEquals(TestConst.generateBrokenLinks(), brokenLinks.getBrokenLinks());
+        assertEquals(TestConst.getBrokenLinks(), brokenLinks.getBrokenLinks());
     }
 }

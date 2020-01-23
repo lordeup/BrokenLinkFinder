@@ -40,4 +40,9 @@ class ResponseTest {
         Boolean expected = response.equals(testResponse);
         assertEquals(true, expected);
     }
+
+    @Test
+    void checkEqualsWithNotEqualParameters() {
+        assertThrows(IllegalArgumentException.class, () -> response.equals(4));
+    }
 }
