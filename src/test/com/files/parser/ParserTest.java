@@ -1,6 +1,5 @@
 package com.files.parser;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -10,15 +9,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParserTest {
-  private List<String> args;
-
-  @BeforeEach
-  void init() {
-    args = Arrays.asList("--files", "input.html", "--out", "report.csv");
-  }
 
   @Test
   void constructorTest() {
+    List<String> args = Arrays.asList("--files", "input.html", "--out", "report.csv");
     Parser parser = new Parser(args);
 
     assertAll("constructor",
@@ -31,6 +25,7 @@ class ParserTest {
 
   @Test
   void getParserStateFiles() {
+    List<String> args = Arrays.asList("--files", "input.html", "--out", "report.csv");
     Parser parser = new Parser(args);
     parser.parsing();
 
@@ -55,6 +50,14 @@ class ParserTest {
   }
 
   @Test
+  void parsingNonexistentMode() {
+    List<String> args = Arrays.asList("--test", "input.html", "--out", "report.csv");
+    Parser parser = new Parser(args);
+
+    assertThrows(IllegalArgumentException.class, parser::parsing, "Parsing nonexistent mode");
+  }
+
+  @Test
   void parsingMissingOptionOut() {
     List<String> args = Arrays.asList("--files", "input.html", "report.csv");
     Parser parser = new Parser(args);
@@ -71,6 +74,22 @@ class ParserTest {
   }
 
   @Test
+  void parsingMissingOptionOutAndOutputFile() {
+    List<String> args = Arrays.asList("--files", "input.html");
+    Parser parser = new Parser(args);
+
+    assertThrows(IllegalArgumentException.class, parser::parsing, "Parsing missing --out and output file");
+  }
+
+  @Test
+  void parsingMissingFilesOrLinks() {
+    List<String> args = Arrays.asList("--out", "report.csv");
+    Parser parser = new Parser(args);
+
+    assertThrows(IllegalArgumentException.class, parser::parsing, "Parsing missing files or links");
+  }
+
+  @Test
   void parsingManyOutputFile() {
     List<String> args = Arrays.asList("--files", "input.html", "--out", "report.csv", "test.csv");
     Parser parser = new Parser(args);
@@ -78,11 +97,35 @@ class ParserTest {
     assertThrows(IllegalArgumentException.class, parser::parsing, "Parsing many output file");
   }
 
-/*  @Test
-  void parsingManyOutputFile() {
-    List<String> args = Arrays.asList("--links", "http://httpstat.us/", "--out", "report.csv");
+  @Test
+  void parsingModeStateLinksAndFiles() {
+    List<String> args = Arrays.asList("--links", "http://httpstat.us/", "--files", "input.html", "--out", "report.csv");
     Parser parser = new Parser(args);
 
-    assertThrows(IllegalArgumentException.class, parser::parsing, "Parsing many output file");
-  }*/
+    assertThrows(IllegalArgumentException.class, parser::parsing, "Parsing mode state links and files");
+  }
+
+  @Test
+  void parsingModeStateFilesAndLinks() {
+    List<String> args = Arrays.asList("--files", "input.html", "--links", "http://httpstat.us/", "--out", "report.csv", "test.csv");
+    Parser parser = new Parser(args);
+
+    assertThrows(IllegalArgumentException.class, parser::parsing, "Parsing mode state files and links");
+  }
+
+  @Test
+  void parsingNoFiles() {
+    List<String> args = Arrays.asList("--files", "--out", "report.csv");
+    Parser parser = new Parser(args);
+
+    assertThrows(IllegalArgumentException.class, parser::parsing, "Parsing no files");
+  }
+
+  @Test
+  void parsingNoLinks() {
+    List<String> args = Arrays.asList("--links", "--out", "report.csv");
+    Parser parser = new Parser(args);
+
+    assertThrows(IllegalArgumentException.class, parser::parsing, "Parsing no links");
+  }
 }
