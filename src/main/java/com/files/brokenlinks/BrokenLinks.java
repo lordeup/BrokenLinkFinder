@@ -1,16 +1,16 @@
 package com.files.brokenlinks;
 
+import com.files.httpcall.HttpCall;
 import com.files.links.Links;
 import com.files.parser.ParserState;
 import com.files.property.Property;
 import com.files.response.Response;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class BrokenLinks {
   private final List<String> pages;
@@ -25,7 +25,7 @@ public class BrokenLinks {
     this.brokenLinks = new ArrayList<>();
   }
 
-  public void run() throws IOException, URISyntaxException {
+  public void run() throws IOException, URISyntaxException, ExecutionException, InterruptedException {
     for (String page : pages) {
       for (Response brokenLink : getBrokenLinksOfPage(page)) {
         if (!brokenLinks.contains(brokenLink)) {
@@ -47,32 +47,35 @@ public class BrokenLinks {
     brokenLinks.add(brokenLink);
   }
 
-  // TODO подумать как упростить
-  private List<Response> getBrokenLinksOfPage(String page) throws URISyntaxException, IOException {
-    List<Response> result = new ArrayList<>();
+  private List<Response> getBrokenLinksOfPage(String page) throws URISyntaxException, IOException, InterruptedException, ExecutionException {
+    Property property = new Property();
 
     Links links = new Links(page, state);
     links.run();
 
-    Property property = new Property();
+    ExecutorService executorService = Executors.newFixedThreadPool(property.getThreadNumber());
 
+    List<HttpCall> httpCalls = new ArrayList<>();
     for (String link : links.getLinks()) {
-      try {
-        HttpURLConnection urlConnection = (HttpURLConnection) new URL(link).openConnection();
-        urlConnection.setReadTimeout(property.getConnectionTimeout());
-        urlConnection.setInstanceFollowRedirects(false);
+      httpCalls.add(new HttpCall(link));
+    }
 
-        if (urlConnection.getResponseCode() >= ERROR_CODE) {
-          int statusCode = urlConnection.getResponseCode();
-          String statusMessage = urlConnection.getResponseMessage();
-          Response response = new Response(link, statusCode, statusMessage);
-          result.add(response);
-        }
-      } catch (Exception ex) {
-        Response response = new Response(link, 522, "Read timeout");
-        result.add(response);
+    List<Future<Response>> httpCallsResponse = executorService.invokeAll(httpCalls);
+    executorService.shutdown();
+
+    return findBrokenLinks(httpCallsResponse);
+  }
+
+  private List<Response> findBrokenLinks(List<Future<Response>> httpCallsResponse) throws ExecutionException, InterruptedException {
+    List<Response> brokenLinks = new ArrayList<>();
+
+    for (Future<Response> httpCallResponse : httpCallsResponse) {
+      Response httpResponse = httpCallResponse.get();
+      if (httpResponse.getStatusCode() >= ERROR_CODE) {
+        brokenLinks.add(httpResponse);
       }
     }
-    return result;
+
+    return brokenLinks;
   }
 }
