@@ -20,14 +20,14 @@ public class Main {
       Parser parser = new Parser(Arrays.asList(args));
       parser.parsing();
 
-      List<Response> brokenLinks = getBrokenLinks(parser.getPages(), parser.getParserState());
+      List<Response> brokenLinksResponse = getBrokenLinks(parser.getPages(), parser.getParserState());
 
       String outputFileName = parser.getOutputFile();
 
       Report report = new Report(outputFileName);
-      report.writeInFile(brokenLinks);
+      report.writeInFile(brokenLinksResponse);
 
-      printFinalMessage(brokenLinks.size(), outputFileName);
+      printFinalMessage(brokenLinksResponse.size(), outputFileName);
     } catch (Exception ex) {
       System.out.println(ex.getMessage());
     }
@@ -45,7 +45,6 @@ public class Main {
     for (String page : pages) {
       Links links = new Links(page, parserState);
       links.findLinks();
-
       BrokenLinks brokenLinks = new BrokenLinks(links.getLinks());
       brokenLinks.findBrokenLinks();
 

@@ -13,10 +13,10 @@ public class Report {
     this.filename = filename;
   }
 
-  public void writeInFile(List<Response> brokenLinksList) throws IOException {
+  public void writeInFile(List<Response> responses) throws IOException {
     try (FileWriter fileWriter = new FileWriter(filename)) {
-      for (Response brokenLink : brokenLinksList) {
-        String str = brokenLink.getUrl() + ", " + brokenLink.getStatusCode() + ", " + brokenLink.getStatusMessage() + "\n";
+      for (Response response : responses) {
+        String str = response.getUrl() + ", " + response.getStatusCode() + ", " + response.getStatusMessage() + "\n";
 
         fileWriter.write(str);
         fileWriter.flush();
