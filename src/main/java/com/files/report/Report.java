@@ -13,7 +13,7 @@ public class Report {
     this.filename = filename;
   }
 
-  public void write(List<Response> brokenLinksList) throws IOException {
+  public void writeInFile(List<Response> brokenLinksList) throws IOException {
     try (FileWriter fileWriter = new FileWriter(filename)) {
       for (Response brokenLink : brokenLinksList) {
         String str = brokenLink.getUrl() + ", " + brokenLink.getStatusCode() + ", " + brokenLink.getStatusMessage() + "\n";
@@ -21,10 +21,6 @@ public class Report {
         fileWriter.write(str);
         fileWriter.flush();
       }
-      int brokenLinksCount = brokenLinksList.size();
-      System.out.println(brokenLinksCount > 0
-              ? "Found " + brokenLinksCount + " broken links, for details check file '" + filename + "'"
-              : "Not found broken links");
     }
   }
 }

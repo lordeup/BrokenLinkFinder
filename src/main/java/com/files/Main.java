@@ -22,14 +22,25 @@ public class Main {
 
       List<Response> brokenLinks = getBrokenLinks(parser.getPages(), parser.getParserState());
 
-      Report report = new Report(parser.getOutputFile());
-      report.write(brokenLinks);
+      String outputFileName = parser.getOutputFile();
+
+      Report report = new Report(outputFileName);
+      report.writeInFile(brokenLinks);
+
+      printFinalMessage(brokenLinks.size(), outputFileName);
     } catch (Exception ex) {
       System.out.println(ex.getMessage());
     }
   }
 
-  private static List<Response> getBrokenLinks(List<String> pages, ParserState parserState) throws IOException, URISyntaxException, ExecutionException, InterruptedException {
+  private static void printFinalMessage(Integer linksSize, String outputFileName) {
+    System.out.println(linksSize > 0
+            ? "Found " + linksSize + " broken links, for details check file '" + outputFileName + "'"
+            : "Not found broken links");
+  }
+
+  private static List<Response> getBrokenLinks(List<String> pages, ParserState parserState)
+          throws IOException, URISyntaxException, ExecutionException, InterruptedException {
     List<Response> brokenLinksList = new ArrayList<>();
     for (String page : pages) {
       Links links = new Links(page, parserState);
