@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Property {
-    private Properties properties = new Properties();
+    private Properties properties;
 
     public Property() throws IOException {
+        properties = new Properties();
         String pathToProperties = "src/main/resources/config.properties";
-        FileInputStream fileInputStream = new FileInputStream(pathToProperties);
-        properties.load(fileInputStream);
+        try (FileInputStream fileInputStream = new FileInputStream(pathToProperties)) {
+            properties.load(fileInputStream);
+        }
     }
 
     public int getConnectionTimeout() {
@@ -18,6 +20,14 @@ public class Property {
             return Integer.parseInt(properties.getProperty("connectionTimeout"));
         } catch (NumberFormatException e) {
             return 10000;
+        }
+    }
+
+    public int getThreadNumber() {
+        try {
+            return Integer.parseInt(properties.getProperty("threadNumber"));
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 }
