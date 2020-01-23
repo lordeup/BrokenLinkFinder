@@ -1,4 +1,4 @@
-package com.files;
+package com.files.response;
 
 import com.files.errormessage.ErrorMessage;
 

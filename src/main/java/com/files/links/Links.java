@@ -1,6 +1,7 @@
-package com.files;
+package com.files.links;
 
 import com.files.parser.ParserState;
+import com.files.property.Property;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document;
@@ -61,7 +62,9 @@ public class Links {
   }
 
   private void connect() throws IOException {
-    document = Jsoup.connect(page).get();
+    Property property = new Property();
+    int connectionTimeout = property.getConnectionTimeout();
+    document = Jsoup.connect(page).timeout(connectionTimeout).get();
   }
 
   private void parse() throws IOException {
