@@ -28,6 +28,6 @@ class MainTest {
     String expectedResult = "Found 7 broken links, for details check file 'report.csv'";
     String actualResult = replaceStr(output.toString());
 
-    assertEquals(expectedResult, actualResult, "Print info new customer");
+    assertEquals(expectedResult, actualResult, "Print final message");
   }
 }
