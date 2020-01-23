@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Property {
-    private Properties properties;
+    private final Properties properties;
 
     public Property() throws IOException {
         properties = new Properties();

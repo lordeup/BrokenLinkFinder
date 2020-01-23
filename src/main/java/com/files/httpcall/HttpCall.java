@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 public class HttpCall implements Callable<Response> {
-    private String url;
+    private final String url;
 
     public HttpCall(String url) {
         this.url = url;
