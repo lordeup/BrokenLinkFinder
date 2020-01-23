@@ -5,6 +5,7 @@ import com.files.response.Response;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class Report {
   private final String filename;
@@ -13,15 +14,15 @@ public class Report {
     this.filename = filename;
   }
 
-  public void write(BrokenLinks brokenLinks) throws IOException {
+  public void write(List<Response> brokenLinksList) throws IOException {
     try (FileWriter fileWriter = new FileWriter(filename)) {
-      for (Response brokenLink : brokenLinks.getBrokenLinks()) {
+      for (Response brokenLink : brokenLinksList) {
         String str = brokenLink.getUrl() + ", " + brokenLink.getStatusCode() + ", " + brokenLink.getStatusMessage() + "\n";
 
         fileWriter.write(str);
         fileWriter.flush();
       }
-      Integer brokenLinksCount = brokenLinks.getBrokenLinksCount();
+      int brokenLinksCount = brokenLinksList.size();
       System.out.println(brokenLinksCount > 0
               ? "Found " + brokenLinksCount + " broken links, for details check file '" + filename + "'"
               : "Not found broken links");
