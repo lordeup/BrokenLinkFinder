@@ -2,7 +2,6 @@ package com.files;
 
 import com.files.response.Response;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,6 +17,11 @@ public class TestConst {
             "https://sun1-91.userapi.com/c824504/v824504398/16cb18/hK_NWFewmSg.jpg?ava=1",
             "http://htmlbook.ru/images/logo.gif"
     );
+
+    public static List<String> getLinksForParseStateFiles() {
+        return linksForParseStateFiles;
+    }
+
     private static final List<String> linksForParseStateLinks = Arrays.asList(
             "https://ww.ru/theme/frontend/app/build/css/main.css?ver=51",
             "https://ww.ru/favicon.ico",
@@ -26,6 +30,10 @@ public class TestConst {
             "https://www.googletagmanager.com/gtag/js?id=UA-134344239-1",
             "https://ww.ru/theme/frontend/app/build/js/main.js?ver=51"
     );
+
+    public static List<String> getLinksForParseStateLinks() {
+        return linksForParseStateLinks;
+    }
 
     private static final List<Response> brokenLinks = Arrays.asList(
             new Response("http://52.136.215.164/links/locked.php", 423, "Locked"),
@@ -37,16 +45,37 @@ public class TestConst {
             new Response("http://htmlbook.ru/images/logo.gif", 404, "Not Found")
     );
 
-    public static List<String> getLinksForParseStateFiles() {
-        return linksForParseStateFiles;
-    }
-
-    public static List<String> getLinksForParseStateLinks() {
-        return linksForParseStateLinks;
-    }
-
     public static List<Response> getBrokenLinks() {
         return brokenLinks;
     }
 
+    private static final int connectionTimeout = 10000;
+
+    public static int getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    private static final int threadNumber = 10;
+
+    public static int getThreadNumber() {
+        return threadNumber;
+    }
+
+    private static final String url = "http://htmlbook.ru/images/logo.gif";
+
+    public static String getUrl() {
+        return url;
+    }
+
+    private static final int statusCode = 404;
+
+    public static int getStatusCode() {
+        return statusCode;
+    }
+
+    private static final String statusMessage = "Not Found";
+
+    public static String getStatusMessage() {
+        return statusMessage;
+    }
 }
