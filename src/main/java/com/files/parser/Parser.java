@@ -46,6 +46,10 @@ public class Parser {
     }
   }
 
+  public List<String> getArgs() {
+    return args;
+  }
+
   public List<String> getPages() {
     return pages;
   }
@@ -58,7 +62,7 @@ public class Parser {
     return parserState;
   }
 
-  public void setParserState(ParserState parserState) {
+  private void setParserState(ParserState parserState) {
     this.parserState = parserState;
   }
 
