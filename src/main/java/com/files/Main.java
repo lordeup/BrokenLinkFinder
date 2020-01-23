@@ -38,7 +38,11 @@ public class Main {
       BrokenLinks brokenLinks = new BrokenLinks(links.getLinks());
       brokenLinks.findBrokenLinks();
 
-      brokenLinksList.addAll(brokenLinks.getBrokenLinks());
+      for (Response brokenLink : brokenLinks.getBrokenLinks()) {
+        if (!brokenLinksList.contains(brokenLink)) {
+          brokenLinksList.add(brokenLink);
+        }
+      }
     }
 
     return brokenLinksList;
