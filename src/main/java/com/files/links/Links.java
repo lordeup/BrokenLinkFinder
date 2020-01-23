@@ -27,7 +27,7 @@ public class Links {
     this.links = new ArrayList<>();
   }
 
-  public void run() throws IOException, URISyntaxException {
+  public void findLinks() throws IOException, URISyntaxException {
     openDocument();
 
     Elements hrefLinks = document.select("[href]");
