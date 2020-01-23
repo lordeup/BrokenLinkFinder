@@ -1,6 +1,5 @@
 package com.files.report;
 
-import com.files.brokenlinks.BrokenLinks;
 import com.files.response.Response;
 
 import java.io.FileWriter;

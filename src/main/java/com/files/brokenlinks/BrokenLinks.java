@@ -1,13 +1,10 @@
 package com.files.brokenlinks;
 
 import com.files.httpcall.HttpCall;
-import com.files.links.Links;
-import com.files.parser.ParserState;
 import com.files.property.Property;
 import com.files.response.Response;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
