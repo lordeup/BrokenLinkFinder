@@ -10,7 +10,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <jsoup.version>1.11.3</jsoup.version>
+        <jsoup.version>1.15.3</jsoup.version>
         <junit-jupiter-api.version>5.6.0-M1</junit-jupiter-api.version>
     </properties>
 
